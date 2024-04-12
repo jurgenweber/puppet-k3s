@@ -43,11 +43,11 @@ class k3s::config (
     }
 
     'joining': {
-      Exec <<| title == 'join-cluster' |>>
+      # Exec <<| title == 'join-cluster' |>>
     }
 
     'node': {
-      Exec <<| title == 'node-join-cluster' |>>
+      # Exec <<| title == 'node-join-cluster' |>>
     }
 
     default: {

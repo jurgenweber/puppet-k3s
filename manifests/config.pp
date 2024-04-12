@@ -19,7 +19,7 @@ class k3s::config (
         command     => "${k3s::binary_path} server --server ${::ipaddress}:6443",
         # apparently makes this data dir; https://docs.k3s.io/cli/server#data
         creates     => '/var/lib/rancher/k3s',
-        environemnt => [
+        environment => [
           "K3S_TOKEN=${token_secret}"
         ]
       }

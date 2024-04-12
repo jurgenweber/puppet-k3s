@@ -25,10 +25,23 @@ class k3s::config (
         ],
         timeout     => 600
       }
+      @@exec { 'node-join-cluster':
+        command     => "${k3s::binary_path} agent --server ${::ipaddress}:6443",
+        # apparently makes this data dir; https://docs.k3s.io/cli/server#data
+        creates     => '/var/lib/rancher/k3s',
+        environment => [
+          "K3S_TOKEN=${token_secret}"
+        ],
+        timeout     => 600
+      }
     }
 
     'joining': {
-      Exec <<| |>>
+      Exec <<| title == 'join-cluster' |>>
+    }
+
+    'node': {
+      Exec <<| title == 'node-join-cluster' |>>
     }
 
     default: {

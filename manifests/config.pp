@@ -7,7 +7,7 @@ class k3s::config (
   case $type {
     'init': {
       exec { 'init-cluster':
-        command     => "${k3s::binary_path} server --cluster-init --disable traefik",
+        command     => "${k3s::binary_path} server --cluster-init --disable traefik &",
         # apparently makes this data dir; https://docs.k3s.io/cli/server#data
         creates     => '/var/lib/rancher/k3s',
         environment => [

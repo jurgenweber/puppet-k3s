@@ -23,6 +23,7 @@ class k3s (
 
   if $ensure == 'present' {
     include k3s::install
+    include k3s::config
   } else {
     include k3s::uninstall
   }

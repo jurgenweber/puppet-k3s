@@ -13,6 +13,7 @@ class k3s::config (
         environment => [
           "K3S_TOKEN=${token_secret}"
         ],
+        logoutput   => true,
         timeout     => 600
       }
       # this is the exporter resource, with the ip details, https://www.puppet.com/docs/puppet/7/lang_exported.html
@@ -23,6 +24,7 @@ class k3s::config (
         environment => [
           "K3S_TOKEN=${token_secret}"
         ],
+        logoutput   => true,
         timeout     => 600
       }
       @@exec { 'node-join-cluster':
@@ -32,6 +34,7 @@ class k3s::config (
         environment => [
           "K3S_TOKEN=${token_secret}"
         ],
+        logoutput   => true,
         timeout     => 600
       }
     }

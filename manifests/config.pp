@@ -2,7 +2,6 @@
 class k3s::config (
   String $token_secret,
   Enum['init','joining'] $type,
-  String $ip_address,
 ) {
   # type as in the 'init'/first master or a 'joining' master
   case $type {

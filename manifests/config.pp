@@ -27,6 +27,7 @@ class k3s::config (
         ],
         logoutput   => true,
         provider    => 'shell',
+        tag         => ['join-cluster']
         timeout     => 600
       }
       @@exec { 'node-join-cluster':
@@ -38,16 +39,17 @@ class k3s::config (
         ],
         logoutput   => true,
         provider    => 'shell',
+        tag         => ['node-join-cluster']
         timeout     => 600
       }
     }
 
     'joining': {
-      # Exec <<| title == 'join-cluster' |>>
+      Exec <<| tag == 'join-cluster' |>>
     }
 
     'node': {
-      # Exec <<| title == 'node-join-cluster' |>>
+      Exec <<| tag == 'node-join-cluster' |>>
     }
 
     default: {

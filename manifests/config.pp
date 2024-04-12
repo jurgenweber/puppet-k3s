@@ -12,7 +12,8 @@ class k3s::config (
         creates     => '/var/lib/rancher/k3s',
         environment => [
           "K3S_TOKEN=${token_secret}"
-        ]
+        ],
+        timeout     => 600
       }
       # this is the exporter resource, with the ip details, https://www.puppet.com/docs/puppet/7/lang_exported.html
       @@exec { 'join-cluster':
@@ -21,7 +22,8 @@ class k3s::config (
         creates     => '/var/lib/rancher/k3s',
         environment => [
           "K3S_TOKEN=${token_secret}"
-        ]
+        ],
+        timeout     => 600
       }
     }
 

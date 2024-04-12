@@ -7,3 +7,4 @@
 /spec/fixtures/manifests/
 /spec/fixtures/modules/
 /tmp/
+*.swp

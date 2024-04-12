@@ -24,7 +24,6 @@ class k3s::install {
         environment => [
           "INSTALL_K3S_SKIP_START=true",
           "INSTALL_K3S_VERSION=${k3s::binary_version}",
-          "K3S_TOKEN=${$k3s::config::token_secret}",
         ],
         require     => [
           File['/tmp/k3s_install.sh'],

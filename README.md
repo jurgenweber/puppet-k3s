@@ -26,6 +26,10 @@ Install this module using Puppet: `puppet module install igorolivei/k3s`
 
 Or via Puppetfile: `mod 'igorolivei-k3s', '1.0.0'`
 
+### dependencies
+
+puppet-archive
+
 ## Usage
 
 - Quick run: `puppet apply -e "include k3s"`

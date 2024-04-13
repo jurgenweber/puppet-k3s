@@ -31,7 +31,7 @@ class k3s::config (
         timeout     => 600
       }
       @@exec { 'node-join-cluster':
-        command     => "${k3s::binary_path} agent --server https://${::ipaddress}:6443 --disable traefik >/var/log/k3s-init.log 2>&1 &",
+        command     => "${k3s::binary_path} agent --server https://${::ipaddress}:6443 >/var/log/k3s-init.log 2>&1 &",
         # apparently makes this data dir; https://docs.k3s.io/cli/server#data
         creates     => '/var/lib/rancher/k3s',
         environment => [

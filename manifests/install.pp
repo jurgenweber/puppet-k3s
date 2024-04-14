@@ -19,7 +19,8 @@ class k3s::install {
         ],
       }
 
-       $environment = $k3s::config::type ? {
+       $environment = $k3s::type ? {
+
          'init'  => [
            "INSTALL_K3S_EXEC=server --disable=traefik",
            "INSTALL_K3S_SKIP_START=true",

@@ -1,17 +1,14 @@
 # @summary Class responsible for configurationk3s
-class k3s::config (
-  String $token_secret,
-  Enum['init','joining','node'] $type,
-) {
+class k3s::config () {
   # type as in the 'init'/first master or a 'joining' master
-  case $type {
+  case $k3s::type {
     'init': {
       exec { 'init-cluster':
         command     => "${k3s::binary_path} server --cluster-init --disable traefik >/var/log/k3s-init.log 2>&1 &",
         # apparently makes this data dir; https://docs.k3s.io/cli/server#data
         creates     => '/var/lib/rancher/k3s',
         environment => [
-          "K3S_TOKEN=${token_secret}"
+          "K3S_TOKEN=${k3s::token_secret}"
         ],
         logoutput   => true,
         provider    => 'shell',
@@ -23,7 +20,7 @@ class k3s::config (
         # apparently makes this data dir; https://docs.k3s.io/cli/server#data
         creates     => '/var/lib/rancher/k3s',
         environment => [
-          "K3S_TOKEN=${token_secret}",
+          "K3S_TOKEN=${k3s::token_secret}",
           "K3S_URL=https://${::ipaddress}:6443"
         ],
         logoutput   => true,
@@ -36,7 +33,7 @@ class k3s::config (
         # apparently makes this data dir; https://docs.k3s.io/cli/server#data
         creates     => '/var/lib/rancher/k3s',
         environment => [
-          "K3S_TOKEN=${token_secret}",
+          "K3S_TOKEN=${k3s::token_secret}",
           "K3S_URL=https://${::ipaddress}:6443"
         ],
         logoutput   => true,
@@ -47,8 +44,6 @@ class k3s::config (
     }
 
     'joining': {
-      notify { $module_name: }
-
       Exec <<| tag == 'join-cluster' |>>
     }
 

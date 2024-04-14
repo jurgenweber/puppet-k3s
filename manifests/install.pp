@@ -29,13 +29,11 @@ class k3s::install {
            "INSTALL_K3S_EXEC=server --disable=traefik",
            "INSTALL_K3S_SKIP_START=true",
            "INSTALL_K3S_VERSION=${k3s::binary_version}",
-           "K3S_URL=https://${::ipaddress}:6443",
          ],
          'node'  => [
            "INSTALL_K3S_EXEC=agent",
            "INSTALL_K3S_SKIP_START=true",
            "INSTALL_K3S_VERSION=${k3s::binary_version}",
-           "K3S_URL=https://${::ipaddress}:6443",
          ]
       }
       exec { 'k3s_install':

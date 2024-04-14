@@ -20,7 +20,6 @@ class k3s::install {
       }
 
        $environment = $k3s::type ? {
-
          'init'  => [
            "INSTALL_K3S_EXEC=server --disable=traefik",
            "INSTALL_K3S_SKIP_START=true",
@@ -37,6 +36,7 @@ class k3s::install {
            "INSTALL_K3S_VERSION=${k3s::binary_version}",
          ]
       }
+
       exec { 'k3s_install':
         command     => '/usr/bin/bash -x /tmp/k3s_install.sh',
         # on first init, we do not want it ot start, after that, no problems

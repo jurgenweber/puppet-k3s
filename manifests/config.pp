@@ -41,6 +41,11 @@ class k3s::config () {
         tag         => ['node-join-cluster'],
         timeout     => 600
       }
+      @@file_line { 'add-k3s-url-to-systemd':
+        path    => '/etc/systemd/system/k3s-agent.service.env',
+        line    => "K3S_URL=https://${::ipaddress}:6443",
+        tag     => ['node-join-cluster'],
+      }
     }
 
     'joining': {

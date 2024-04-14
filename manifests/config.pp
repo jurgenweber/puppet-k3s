@@ -19,11 +19,12 @@ class k3s::config (
       }
       # this is the exporter resource, with the ip details, https://www.puppet.com/docs/puppet/7/lang_exported.html
       @@exec { 'join-cluster':
-        command     => "${k3s::binary_path} server --server https://${::ipaddress}:6443 --disable traefik >/var/log/k3s-init.log 2>&1 &",
+        command     => "${k3s::binary_path} server --disable traefik >/var/log/k3s-init.log 2>&1 &",
         # apparently makes this data dir; https://docs.k3s.io/cli/server#data
         creates     => '/var/lib/rancher/k3s',
         environment => [
-          "K3S_TOKEN=${token_secret}"
+          "K3S_TOKEN=${token_secret}",
+          "K3S_URL=https://${::ipaddress}:6443"
         ],
         logoutput   => true,
         provider    => 'shell',
@@ -31,11 +32,12 @@ class k3s::config (
         timeout     => 600
       }
       @@exec { 'node-join-cluster':
-        command     => "${k3s::binary_path} agent --server https://${::ipaddress}:6443 >/var/log/k3s-init.log 2>&1 &",
+        command     => "${k3s::binary_path} agent >/var/log/k3s-init.log 2>&1 &",
         # apparently makes this data dir; https://docs.k3s.io/cli/server#data
         creates     => '/var/lib/rancher/k3s',
         environment => [
-          "K3S_TOKEN=${token_secret}"
+          "K3S_TOKEN=${token_secret}",
+          "K3S_URL=https://${::ipaddress}:6443"
         ],
         logoutput   => true,
         provider    => 'shell',

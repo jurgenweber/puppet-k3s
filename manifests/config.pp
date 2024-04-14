@@ -54,6 +54,11 @@ class k3s::config () {
 
     'node': {
       Exec <<| tag == 'node-join-cluster' |>>
+
+      file_line { 'add-env-token-to-systemd':
+        path    => '/etc/systemd/system/k3s-agent.service.env',
+        line    => "K3S_TOKEN=${$k3s::token_secret}",
+      }
     }
 
     default: {

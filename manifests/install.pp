@@ -19,12 +19,14 @@ class k3s::install {
         ],
       }
 
-      exec { '/tmp/k3s_install.sh':
+      exec { 'k3s_install':
+        command     => '/usr/bin/bash -x /tmp/k3s_install.sh',
         # on first init, we do not want it ot start, after that, no problems
         environment => [
           "INSTALL_K3S_SKIP_START=true",
           "INSTALL_K3S_VERSION=${k3s::binary_version}",
         ],
+        logoutput   => true,
         require     => [
           File['/tmp/k3s_install.sh'],
         ],

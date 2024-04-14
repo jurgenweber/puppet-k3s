@@ -24,7 +24,7 @@ class k3s::install {
            "INSTALL_K3S_SKIP_START=true",
            "INSTALL_K3S_VERSION=${k3s::binary_version}",
            "K3S_URL=https://${::ipaddress}:6443",
-         ]
+         ],
          default => [
            "INSTALL_K3S_SKIP_START=true",
            "INSTALL_K3S_VERSION=${k3s::binary_version}",

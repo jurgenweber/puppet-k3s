@@ -109,13 +109,16 @@ spec:
         - name: vip_retryperiod
           value: "1"
         - name: address
-          value: 192.168.0.30
+          value: 192.168.1.30
         - name: prometheus_server
           value: :2112
         image: ghcr.io/kube-vip/kube-vip:v0.8.0
         imagePullPolicy: IfNotPresent
         name: kube-vip
-        resources: {}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
         securityContext:
           capabilities:
             add:

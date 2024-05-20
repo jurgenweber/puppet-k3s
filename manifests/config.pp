@@ -19,7 +19,7 @@ class k3s::config () {
         content => template('k3s/config.yaml.erb'),
       }
       file { '/var/lib/rancher/k3s/server/manifests/kube-vip-rbac.yaml':
-        ensure => absent,
+        ensure => $k3s::kube_vip_file,
         source => 'puppet:///modules/k3s/kube-vip.yaml'
       }
       # keeps adding lines
@@ -68,7 +68,7 @@ class k3s::config () {
         content => template('k3s/config.yaml.erb'),
       }
       file { '/var/lib/rancher/k3s/server/manifests/kube-vip-rbac.yaml':
-        ensure => absent,
+        ensure => $k3s::kube_vip_file,
         source => 'puppet:///modules/k3s/kube-vip.yaml'
       }
       # keeps adding lines

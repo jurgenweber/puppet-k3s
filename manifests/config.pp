@@ -19,7 +19,7 @@ class k3s::config () {
         content => template('k3s/config.yaml.erb'),
       }
       file_line { 'add-servicelb-disable-to-systemd':
-        path    => '/etc/systemd/system/k3s-agent.service',
+        path    => '/etc/systemd/system/k3s.service',
         line    => '        --disable traefik --disable servicelb \\',
         match   => '        \'--disable traefik\' \\',
       }
@@ -63,7 +63,7 @@ class k3s::config () {
         content => template('k3s/config.yaml.erb'),
       }
       file_line { 'add-servicelb-disable-to-systemd':
-        path    => '/etc/systemd/system/k3s-agent.service',
+        path    => '/etc/systemd/system/k3s.service',
         line    => '        --disable traefik --disable servicelb \\',
         match   => '        \'--disable traefik\' \\',
       }

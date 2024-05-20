@@ -1,4 +1,4 @@
 tls-san:
-<% $k3s::tls_san.each do |tls| -%>
-  -  <%= tls %>
+<% scope['k3s::tls_san'].each do |tls| -%>
+  - <%= tls %>
 <% end -%>

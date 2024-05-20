@@ -4,7 +4,7 @@ class k3s::config () {
   case $k3s::type {
     'init': {
       exec { 'init-cluster':
-        command     => "${k3s::binary_path} server --cluster-init --disable traefik >/var/log/k3s-init.log 2>&1 &",
+        command     => "${k3s::binary_path} server --cluster-init --disable servicelb --disable traefik >/var/log/k3s-init.log 2>&1 &",
         # apparently makes this data dir; https://docs.k3s.io/cli/server#data
         creates     => '/var/lib/rancher/k3s',
         environment => [
@@ -14,9 +14,18 @@ class k3s::config () {
         provider    => 'shell',
         timeout     => 600
       }
+      file { '/etc/rancher/k3s/config.yaml':
+        ensure  => file,
+        content => template('k3s/config.yaml.erb'),
+      }
+      file_line { 'add-servicelb-disable-to-systemd':
+        path    => '/etc/systemd/system/k3s-agent.service',
+        line    => '        --disable traefik --disable servicelb \\',
+        match   => '        \'--disable traefik\' \\',
+      }
       # this is the exporter resource, with the ip details, https://www.puppet.com/docs/puppet/7/lang_exported.html
       @@exec { 'join-cluster':
-        command     => "${k3s::binary_path} server --disable traefik >/var/log/k3s-init.log 2>&1 &",
+        command     => "${k3s::binary_path} server --disable servicelb --disable traefik >/var/log/k3s-init.log 2>&1 &",
         # apparently makes this data dir; https://docs.k3s.io/cli/server#data
         creates     => '/var/lib/rancher/k3s',
         environment => [
@@ -49,6 +58,16 @@ class k3s::config () {
     }
 
     'joining': {
+      file { '/etc/rancher/k3s/config.yaml':
+        ensure  => file,
+        content => template('k3s/config.yaml.erb'),
+      }
+      file_line { 'add-servicelb-disable-to-systemd':
+        path    => '/etc/systemd/system/k3s-agent.service',
+        line    => '        --disable traefik --disable servicelb \\',
+        match   => '        \'--disable traefik\' \\',
+      }
+
       Exec <<| tag == 'join-cluster' |>>
     }
 

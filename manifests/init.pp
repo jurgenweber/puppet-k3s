@@ -17,6 +17,7 @@ class k3s (
   String $binary_path,
   String $token_secret,
   Enum['init','joining','node'] $type,
+  tls_san,
 ) {
   if $installation_mode == 'binary' and (!$binary_path or !$binary_version) {
     fail('The vars $binary_version and $binary_path must be set when using the \

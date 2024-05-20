@@ -21,7 +21,7 @@ class k3s::config () {
       file_line { 'add-servicelb-disable-to-systemd':
         path    => '/etc/systemd/system/k3s.service',
         line    => '  --disable=traefik --disable=servicelb \\ ',
-        match   => '.*\'--disable=traefik\' \\ ',
+        match   => '.*\'--disable=traefik\'',
       }
       # this is the exporter resource, with the ip details, https://www.puppet.com/docs/puppet/7/lang_exported.html
       @@exec { 'join-cluster':
@@ -65,7 +65,7 @@ class k3s::config () {
       file_line { 'add-servicelb-disable-to-systemd':
         path    => '/etc/systemd/system/k3s.service',
         line    => ' --disable=traefik --disable=servicelb \\ ',
-        match   => '.*\'--disable=traefik\' \\ ',
+        match   => '.*\'--disable=traefik\'',
       }
 
       Exec <<| tag == 'join-cluster' |>>

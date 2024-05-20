@@ -18,6 +18,10 @@ class k3s::config () {
         ensure  => file,
         content => template('k3s/config.yaml.erb'),
       }
+      file { '/var/lib/rancher/k3s/server/manifests/kube-vip-rbac.yaml':
+        ensure => file,
+        source => 'puppet:///modules/k3s/kube-vip.yaml'
+      }
       # keeps adding lines
       # file_line { 'add-servicelb-disable-to-systemd':
       #   path    => '/etc/systemd/system/k3s.service',
@@ -62,6 +66,10 @@ class k3s::config () {
       file { '/etc/rancher/k3s/config.yaml':
         ensure  => file,
         content => template('k3s/config.yaml.erb'),
+      }
+      file { '/var/lib/rancher/k3s/server/manifests/kube-vip-rbac.yaml':
+        ensure => file,
+        source => 'puppet:///modules/k3s/kube-vip.yaml'
       }
       # keeps adding lines
       # file_line { 'add-servicelb-disable-to-systemd':

@@ -1,9 +1,9 @@
-# https://kube-vip.io/docs/usage/k3s/
+# https://kube-vip-nodes.io/docs/usage/k3s/
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: kube-vip
+  name: kube-vip-nodes
   namespace: kube-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -11,7 +11,7 @@ kind: ClusterRole
 metadata:
   annotations:
     rbac.authorization.kubernetes.io/autoupdate: "true"
-  name: system:kube-vip-role
+  name: system:kube-vip-nodes-role
 rules:
   - apiGroups: [""]
     resources: ["services/status"]
@@ -32,14 +32,14 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: system:kube-vip-binding
+  name: system:kube-vip-nodes-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: system:kube-vip-role
+  name: system:kube-vip-nodes-role
 subjects:
 - kind: ServiceAccount
-  name: kube-vip
+  name: kube-vip-nodes
   namespace: kube-system
 ---
 apiVersion: apps/v1
@@ -47,19 +47,19 @@ kind: DaemonSet
 metadata: # generated here ; https://kube-vip.io/docs/installation/daemonset/#generating-a-manifest
   creationTimestamp: null
   labels:
-    app.kubernetes.io/name: kube-vip-ds
+    app.kubernetes.io/name: kube-vip-nodes-ds
     app.kubernetes.io/version: v0.8.0
-  name: kube-vip-ds
+  name: kube-vip-nodes-ds
   namespace: kube-system
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: kube-vip-ds
+      app.kubernetes.io/name: kube-vip-nodes-ds
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app.kubernetes.io/name: kube-vip-ds
+        app.kubernetes.io/name: kube-vip-nodes-ds
         app.kubernetes.io/version: v0.8.0
     spec:
       affinity:
@@ -67,10 +67,7 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
-              - key: node-role.kubernetes.io/master
-                operator: Exists
-            - matchExpressions:
-              - key: node-role.kubernetes.io/control-plane
+              - key: node-role.kubernetes.io/node
                 operator: Exists
       containers:
       - args:
@@ -90,19 +87,19 @@ spec:
           value: "32"
         - name: dns_mode
           value: first
-        - name: cp_enable
-          value: "true"
-        - name: cp_namespace
-          value: kube-system
-        # this one is just going to do the control plane
-        # - name: svc_enable
+        # this is the control plane stuff, not using here
+        # - name: cp_enable
         #   value: "true"
-        # - name: svc_leasename
-        #   value: plndr-svcs-lock
+        # - name: cp_namespace
+        #   value: kube-system
+        - name: svc_enable
+          value: "true"
+        - name: svc_leasename
+          value: plndr-svcs-lock-nodes
         - name: vip_leaderelection
           value: "true"
         - name: vip_leasename
-          value: plndr-cp-lock
+          value: plndr-cp-lock-nodes
         - name: vip_leaseduration
           value: "5"
         - name: vip_renewdeadline
@@ -115,7 +112,7 @@ spec:
           value: :2112
         image: ghcr.io/kube-vip/kube-vip:v0.8.0
         imagePullPolicy: IfNotPresent
-        name: kube-vip
+        name: kube-vip-nodes
         resources:
           requests:
             cpu: 100m
@@ -126,7 +123,7 @@ spec:
             - NET_ADMIN
             - NET_RAW
       hostNetwork: true
-      serviceAccountName: kube-vip
+      serviceAccountName: kube-vip-nodes
       tolerations:
       - effect: NoSchedule
         operator: Exists

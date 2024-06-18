@@ -4,7 +4,7 @@ class k3s::config () {
   case $k3s::type {
     'init': {
       exec { 'init-cluster':
-        command     => "${k3s::binary_path} server --cluster-init --disable servicelb --disable traefik >/var/log/k3s-init.log 2>&1 &",
+        command     => "${k3s::binary_path} server --cluster-init --disable servicelb --disable traefik --node-taint 'node-role.kubernetes.io/control-plane:NoSchedule' >/var/log/k3s-init.log 2>&1 &",
         # apparently makes this data dir; https://docs.k3s.io/cli/server#data
         creates     => '/var/lib/rancher/k3s',
         environment => [
@@ -30,7 +30,7 @@ class k3s::config () {
       # }
       # this is the exporter resource, with the ip details, https://www.puppet.com/docs/puppet/7/lang_exported.html
       @@exec { 'join-cluster':
-        command     => "${k3s::binary_path} server --disable servicelb --disable traefik >/var/log/k3s-init.log 2>&1 &",
+        command     => "${k3s::binary_path} server --disable servicelb --disable traefik --node-taint 'node-role.kubernetes.io/control-plane:NoSchedule' >/var/log/k3s-init.log 2>&1 &",
         # apparently makes this data dir; https://docs.k3s.io/cli/server#data
         creates     => '/var/lib/rancher/k3s',
         environment => [
@@ -43,7 +43,7 @@ class k3s::config () {
         timeout     => 600
       }
       @@exec { 'node-join-cluster':
-        command     => "${k3s::binary_path} agent >/var/log/k3s-init.log 2>&1 &",
+        command     => "${k3s::binary_path} agent --node-label 'node-role.kubernetes.io/node=true' >/var/log/k3s-init.log 2>&1 &",
         # apparently makes this data dir; https://docs.k3s.io/cli/server#data
         creates     => '/var/lib/rancher/k3s',
         environment => [

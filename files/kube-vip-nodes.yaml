@@ -96,6 +96,9 @@ spec:
           value: "true"
         - name: svc_leasename
           value: plndr-svcs-lock-nodes
+          # https://github.com/kube-vip/kube-vip/issues/859
+        - name: svc_election
+          value: "true"
         - name: vip_leaderelection
           value: "true"
         - name: vip_leasename

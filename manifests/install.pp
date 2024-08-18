@@ -21,17 +21,17 @@ class k3s::install {
 
        $environment = $k3s::type ? {
          'init'  => [
-           "INSTALL_K3S_EXEC=server --disable=traefik",
+           "INSTALL_K3S_EXEC=server --disable servicelb --disable traefik --node-taint 'node-role.kubernetes.io/control-plane:NoSchedule'",
            "INSTALL_K3S_SKIP_START=true",
            "INSTALL_K3S_VERSION=${k3s::binary_version}",
          ],
          'joining'  => [
-           "INSTALL_K3S_EXEC=server --disable=traefik",
+           "INSTALL_K3S_EXEC=server --disable servicelb --disable traefik --node-taint 'node-role.kubernetes.io/control-plane:NoSchedule'",
            "INSTALL_K3S_SKIP_START=true",
            "INSTALL_K3S_VERSION=${k3s::binary_version}",
          ],
          'node'  => [
-           "INSTALL_K3S_EXEC=agent",
+           "INSTALL_K3S_EXEC=agent --node-label 'node-role.kubernetes.io/node=true'",
            "INSTALL_K3S_SKIP_START=true",
            "INSTALL_K3S_VERSION=${k3s::binary_version}",
          ]

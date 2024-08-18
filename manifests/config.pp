@@ -3,6 +3,7 @@ class k3s::config () {
   # type as in the 'init'/first master or a 'joining' master
   case $k3s::type {
     'init': {
+      # if you change stuff here, make sure it matches in ther install.pp
       exec { 'init-cluster':
         command     => "${k3s::binary_path} server --cluster-init --disable servicelb --disable traefik --node-taint 'node-role.kubernetes.io/control-plane:NoSchedule' >/var/log/k3s-init.log 2>&1 &",
         # apparently makes this data dir; https://docs.k3s.io/cli/server#data
@@ -26,12 +27,6 @@ class k3s::config () {
         ensure => $k3s::kube_vip_file,
         source => 'puppet:///modules/k3s/kube-vip-nodes.yaml'
       }
-      # keeps adding lines
-      # file_line { 'add-servicelb-disable-to-systemd':
-      #   path    => '/etc/systemd/system/k3s.service',
-      #   line    => '  --disable=traefik --disable=servicelb \\ ',
-      #   match   => '.*\'--disable=traefik\'',
-      # }
       # this is the exporter resource, with the ip details, https://www.puppet.com/docs/puppet/7/lang_exported.html
       @@exec { 'join-cluster':
         command     => "${k3s::binary_path} server --disable servicelb --disable traefik --node-taint 'node-role.kubernetes.io/control-plane:NoSchedule' >/var/log/k3s-init.log 2>&1 &",

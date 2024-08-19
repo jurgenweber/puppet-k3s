@@ -31,7 +31,7 @@ class k3s::install {
            "INSTALL_K3S_VERSION=${k3s::binary_version}",
          ],
          'node'  => [
-           "INSTALL_K3S_EXEC=agent --node-label 'node-role.kubernetes.io/node=true'",
+           "INSTALL_K3S_EXEC=agent" #  --node-label 'node-role.kubernetes.io/node=true'", # broke the systemd script
            "INSTALL_K3S_SKIP_START=true",
            "INSTALL_K3S_VERSION=${k3s::binary_version}",
          ]

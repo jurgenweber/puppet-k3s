@@ -19,6 +19,7 @@ class k3s (
   Enum['init', 'joining', 'node'] $type,
   Array[String] $tls_san = [],
   Enum['file', 'absent'] $kube_vip_file = file,
+  String $runtimeclass = 'default',
 ) {
   if $installation_mode == 'binary' and (!$binary_path or !$binary_version) {
     fail('The vars $binary_version and $binary_path must be set when using the \

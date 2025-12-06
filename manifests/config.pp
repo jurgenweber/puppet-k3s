@@ -92,6 +92,12 @@ class k3s::config () {
         path    => '/etc/systemd/system/k3s-agent.service.env',
         line    => "K3S_TOKEN=${$k3s::token_secret}",
       }
+      if ($k3s::runtimeclass != 'default') {
+        file_line { 'add-env-token-to-systemd':
+          path    => '/etc/systemd/system/k3s-agent.service.env',
+          line    => "K3S_DEFAULT_RUNTIME=${$k3s::runtimeclass}",
+        }
+      }
     }
 
     default: {

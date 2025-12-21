@@ -1,5 +1,8 @@
 # @summary Class responsible for configurationk3s
 class k3s::config () {
+
+  notify { $k3s::type: }
+
   # type as in the 'init'/first master or a 'joining' master
   case $k3s::type {
     'init': {

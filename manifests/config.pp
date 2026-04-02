@@ -3,9 +3,16 @@ class k3s::config () {
 
   notify { $k3s::type: }
 
+  # Resolve master IP: prefer explicit param, fall back to networking fact
+  $_master_ip = pick($k3s::master_ip, $facts['networking']['ip'])
+
   # type as in the 'init'/first master or a 'joining' master
   case $k3s::type {
     'init': {
+      if empty($_master_ip) {
+        fail("k3s::config: Could not determine master IP. Set k3s::master_ip in Hiera.")
+      }
+
       # if you change stuff here, make sure it matches in ther install.pp
       exec { 'init-cluster':
         command     => "${k3s::binary_path} server --cluster-init --disable servicelb --disable traefik --node-taint 'node-role.kubernetes.io/control-plane:NoSchedule' >/var/log/k3s-init.log 2>&1 &",
@@ -37,7 +44,7 @@ class k3s::config () {
         creates     => '/var/lib/rancher/k3s',
         environment => [
           "K3S_TOKEN=${k3s::token_secret}",
-          "K3S_URL=https://${::ipaddress}:6443"
+          "K3S_URL=https://${_master_ip}:6443"
         ],
         logoutput   => true,
         provider    => 'shell',
@@ -50,7 +57,7 @@ class k3s::config () {
         creates     => '/var/lib/rancher/k3s',
         environment => [
           "K3S_TOKEN=${k3s::token_secret}",
-          "K3S_URL=https://${::ipaddress}:6443"
+          "K3S_URL=https://${_master_ip}:6443"
         ],
         logoutput   => true,
         provider    => 'shell',
@@ -59,7 +66,8 @@ class k3s::config () {
       }
       @@file_line { 'add-k3s-url-to-systemd':
         path    => '/etc/systemd/system/k3s-agent.service.env',
-        line    => "K3S_URL=https://${::ipaddress}:6443",
+        line    => "K3S_URL=https://${_master_ip}:6443",
+        match   => '^K3S_URL=',
         tag     => ['node-join-cluster'],
       }
     }

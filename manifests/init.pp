@@ -20,6 +20,7 @@ class k3s (
   Array[String] $tls_san = [],
   Enum['file', 'absent'] $kube_vip_file = file,
   String $runtimeclass = 'default',
+  Optional[Stdlib::IP::Address] $master_ip = undef,
 ) {
   if $installation_mode == 'binary' and (!$binary_path or !$binary_version) {
     fail('The vars $binary_version and $binary_path must be set when using the \
